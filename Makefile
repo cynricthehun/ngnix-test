@@ -55,7 +55,10 @@ docker-tag-prod:
 pull-dev-nginx:
 	docker pull nginx
 
-deploy-dev: aws-login-dev pull-dev-nginx docker-tag-dev
+docker-build-dev:
+	docker build -f Dockerfile -t nginx:latest .
+
+deploy-dev: aws-login-dev docker-build-dev docker-tag-dev
 	# auto docker login using aws creds
 	aws ecr get-login-password --region $(aws_region) | docker login --username AWS --password-stdin $(ecr_registry_dev)
 
